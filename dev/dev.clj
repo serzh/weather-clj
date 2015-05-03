@@ -2,7 +2,8 @@
    (:require [ns-tracker.core :refer (ns-tracker)]
              [weather-clj.system :as s]
              [com.stuartsierra.component :as component]
-             [environ.core :as environ]))
+             [environ.core :as environ]
+             [figwheel-sidecar.repl :as figrepl]))
 
 (defonce system nil)
 
@@ -31,3 +32,5 @@
   (stop)
   (reload-ns)
   (go))
+
+(def cljs-repl figrepl/cljs-repl)

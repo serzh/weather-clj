@@ -35,3 +35,9 @@ To run repl and start system do
     => (init)     ;; create new not started system
     => (start)    ;; start system
     => (go)       ;; shorthand for (do (init) (start))
+    
+To run figwheel repl do
+
+    lein do clean, figwheel
+    
+end follow http://localhost:3449 at the browser.

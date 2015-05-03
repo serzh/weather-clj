@@ -11,7 +11,8 @@
                  [prismatic/schema "0.3.3"]
                  [environ "1.0.0"]
                  [compojure "1.3.3"]
-                 [ring "1.2.1"]]
+                 [ring "1.2.1"]
+                 [reagent "0.5.0"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]
             [lein-environ "1.0.0"]
