@@ -5,7 +5,6 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :repl-options {:init-ns user}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-3165"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [com.stuartsierra/component "0.2.3"]
                  [prismatic/schema "0.3.3"]
@@ -17,7 +16,10 @@
                  [environ "1.0.0"]
                  [compojure "1.3.3"]
                  [ring "1.2.1"]
-                 [reagent "0.5.0"]]
+                 ;; Frontend deps
+                 [reagent "0.5.0"]
+                 [com.andrewmcveigh/cljs-time "0.3.4"]
+                 [org.clojure/clojurescript "0.0-3165"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]
             [lein-environ "1.0.0"]
