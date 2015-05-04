@@ -20,6 +20,25 @@ And run the application
     lein run
 
 # Development
+
+## Database
+This application uses *postgresql* as it's primary database.
+You can use your own cluster, previously run deploy/postgresql/files/schema.sql on it.
+Or, preferable, you can run it in Vagrant using [Ansible](http://docs.ansible.com/index.html). You should install
+[vagrant](http://www.vagrantup.com/downloads) and [virtualbox](https://www.virtualbox.org/wiki/Linux_Downloads).
+Then you should setup vagrant environment.
+
+    cd $PROJECT_DIR
+    vagrant up
+
+This will setup *db* virtual machine with 192.168.0.2 ip.
+Then run ansible to setup postgres on the vm and sit back
+
+    cd $PROJECT_DIR/deploy
+    ansible-playbook -i local.hosts pre_postgresql.yml
+    
+## Application
+
 Configure profiles.clj file as described in Run topic.
                      
 This project uses sierra's component library.

@@ -1,0 +1,48 @@
+---
+- name: Install Postgresql
+  hosts: db
+  tasks:
+
+    - name: Install packages
+      apt: pkg="{{item}}" state=installed
+      sudo: yes
+      with_items:
+        - python-psycopg2
+        - postgresql-9.3
+
+    - name: Update Locale
+      command: update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 LANGUAGE=en_US.UTF-8
+      sudo: yes
+
+    - name: Create cluster
+      shell: pg_createcluster 9.3 main
+      args: { creates: /var/lib/postgresql/9.3/main }
+      environment:
+        LANGUAGE: "en_US.UTF-8"
+        LC_ALL: "en_US.UTF-8"
+      sudo: yes
+
+    - name: Start pg
+      service: name=postgresql state=started
+      sudo: yes
+
+    - name: Create user
+      postgresql_user: name={{pg_username}}
+                       password={{pg_password}}
+                       state=present
+      sudo: yes
+      sudo_user: postgres
+
+    - name: Create database
+      postgresql_db: name=weather
+                     owner={{pg_username}}
+                     state=present
+      sudo: yes
+      sudo_user: postgres
+
+    - name: Copy schema file
+      copy: src=postgresql/files/schema.sql dest=/tmp/schema.sql
+
+    - name: Init schema
+      command: psql -U {{pg_username}} -h localhost -f /tmp/schema.sql weather
+      environment: { PGPASSWORD: "{{pg_password}}" }
