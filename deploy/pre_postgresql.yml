@@ -22,8 +22,22 @@
         LC_ALL: "en_US.UTF-8"
       sudo: yes
 
+    - name: Setup pg_hba
+      lineinfile: dest=/etc/postgresql/9.3/main/pg_hba.conf
+                  line="host all all 0.0.0.0/0 md5"
+                  state=present
+      sudo: yes
+      sudo_user: postgres
+
+    - name: Setup pg_hba
+      lineinfile: dest=/etc/postgresql/9.3/main/postgresql.conf
+                  line="listen_addresses = '*'"
+                  state=present
+      sudo: yes
+      sudo_user: postgres
+
     - name: Start pg
-      service: name=postgresql state=started
+      service: name=postgresql state=restarted
       sudo: yes
 
     - name: Create user
