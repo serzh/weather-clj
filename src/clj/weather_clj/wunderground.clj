@@ -16,8 +16,11 @@
 
 (defn get-weather [wun city date]
   (let [{api-key :api-key} wun
+        city-full ({"tampere" "Finland/Tampere"
+                    "london" "England/London"
+                    "durham" "NC/Durham"} city)
         uri (format "http://api.wunderground.com/api/%s/history_%s/q/%s.xml"
-                    api-key date city)
+                    api-key date city-full)
         res @(http/get uri)]
     (when-let [error (:error res)]
       (throw error))

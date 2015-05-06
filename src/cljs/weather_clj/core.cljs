@@ -27,12 +27,15 @@
 
 (defn fetch-button [data]
   [:button {:on-click (fn [e]
-                        (let [{:keys [location date]} @data]
+                        (let [{:keys [location date]} @data
+                              date-str (->> date
+                                           (tf/parse (tf/formatter "yyyy-MM-dd"))
+                                           (tf/unparse (tf/formatter "yyyyMMdd")))]
                           (go
                             (let [conditions (:body (<! (http/get (string/format "/conditions/%s/%s"
-                                                                                   location
-                                                                                   date))))]
-                                (swap! data assoc :conditions conditions)))))}
+                                                                                 location
+                                                                                 date-str))))]
+                              (swap! data assoc :conditions conditions)))))}
    "Fetch"])
 
 (defn conditions [data]
