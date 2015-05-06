@@ -10,17 +10,25 @@
             [weather-clj.wunderground :as wunderground]
             [cheshire.core :as json]))
 
-(defn get-weather [{{:keys [city date]} :params}]
-  (res/content-type {:body    (json/generate-string {:city city :date date})
-                     :status  200}
-                    "application/json"))
+(defn get-weather [{{:keys [city date]} :params
+                    web :web}]
+  (let [result (json/generate-string (wunderground/get-weather (:wunderground web)
+                                                               city date))]
+    (res/content-type {:body   result
+                       :status 200}
+                      "application/json")))
 
 (route/defroutes routes
   (GET "/conditions/:city/:date" req (get-weather req))
   (GET "/" req (res/resource-response "public/index.html")))
 
+(defn wrap-with-web [h c]
+  (fn [req]
+    (h (assoc req :web c))))
+
 (defn handler [c]
   (-> routes
+      (wrap-with-web c)
       (wrap-keyword-params)
       (wrap-resource "public")))
 

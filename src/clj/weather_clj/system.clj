@@ -9,8 +9,10 @@
            db-host db-port db-name db-user db-pass
            wunderground-api-key]}]
   (component/system-map
-    :web (web/new-web {:host web-host
-                       :port (Integer/valueOf web-port)})
+    :web (component/using
+           (web/new-web {:host web-host
+                        :port (Integer/valueOf web-port)})
+           [:wunderground])
     :wunderground (wunderground/new-wunderground {:api-key wunderground-api-key})
     :storage (storage/new-storage {:host db-host
                                    :port (Integer/valueOf db-port)
