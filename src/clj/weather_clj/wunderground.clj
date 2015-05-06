@@ -3,7 +3,10 @@
             [com.stuartsierra.component :as component]
             [cheshire.core :as json]
             [clojure.tools.logging :as log]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [clojure.xml :as xml]
+            [clojure.java.io :as io]
+            [clj-xpath.core :refer [$x:text $x]]))
 
 (defrecord Wunderground [api-key]
   component/Lifecycle
@@ -11,17 +14,13 @@
   (stop [c] c))
 
 (defn parse-data [data]
-  (let [res (json/parse-string data keyword)]
-    (when-let [error (get-in res [:response :error])]
-      (log/errorf "Error parsing data. Error: \"%s\".\nData: \"%s\""
-                  (pr-str error) (pr-str data)))
-    (-> res
-        :current_observation
-        (select-keys [:weather :temp_c :wind_kph]))))
+  {:temp     (Integer/valueOf ($x:text "/response/current_observation/temp_c" data))
+   :wind-kph (Integer/valueOf ($x:text "/response/current_observation/wind_kph" data))
+   :weather  ($x:text "/response/current_observation/weather" data)})
 
 (defn get-weather [wun city]
   (let [{api-key :api-key} wun
-        uri (format "http://api.wunderground.com/api/%s/conditions/q/%s.json"
+        uri (format "http://api.wunderground.com/api/%s/conditions/q/%s.xml"
                     api-key city)
         res @(http/get uri)]
     (when-let [error (:error res)]

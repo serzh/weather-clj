@@ -17,6 +17,7 @@
                  [compojure "1.3.3"]
                  [ring "1.2.1"]
                  [yesql "0.4.0"]
+                 [com.github.kyleburton/clj-xpath "1.4.3"]
                  [org.postgresql/postgresql "9.3-1102-jdbc41"]
                  ;; Frontend deps
                  [reagent "0.5.0"]
