@@ -1,7 +1,11 @@
 (ns ^:figwheel-always weather-clj.core
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [reagent.core :as reagent]
+            [goog.string :as string]
             [cljs-time.local :as local]
-            [cljs-time.format :as tf]))
+            [cljs-time.format :as tf]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]))
 
 (enable-console-print!)
 
@@ -17,8 +21,17 @@
            :on-change #(swap! data assoc :date (-> % .-target .-value))}])
 
 (defn fetch-button [data]
-  [:button {:on-click (fn [e] (prn @data))}
+  [:button {:on-click (fn [e]
+                        (let [{:keys [location date]} @data]
+                          (go
+                            (let [conditions (:body (<! (http/get (string/format "/conditions/%s/%s"
+                                                                                   location
+                                                                                   date))))]
+                                (swap! data assoc :conditions conditions)))))}
    "Fetch"])
+
+(defn conditions [data]
+  [:div (pr-str (:conditions @data))])
 
 (defn weather-component []
   (let [cities [["tampere" "Tampere"]
@@ -31,7 +44,8 @@
       [:div
        [city-select cities data]
        [date-select data]
-       [fetch-button data]])))
+       [fetch-button data]
+       [conditions data]])))
 
 (reagent/render-component [:div [weather-component]]
                           (.-body js/document))

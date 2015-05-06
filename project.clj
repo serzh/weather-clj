@@ -20,8 +20,9 @@
                  [org.postgresql/postgresql "9.3-1102-jdbc41"]
                  ;; Frontend deps
                  [reagent "0.5.0"]
+                 [cljs-http "0.1.30"]
                  [com.andrewmcveigh/cljs-time "0.3.4"]
-                 [org.clojure/clojurescript "0.0-3165"]]
+                 [org.clojure/clojurescript "0.0-3211"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]
             [lein-environ "1.0.0"]
