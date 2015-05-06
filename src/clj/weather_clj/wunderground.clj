@@ -1,11 +1,7 @@
 (ns weather-clj.wunderground
   (:require [org.httpkit.client :as http]
             [com.stuartsierra.component :as component]
-            [cheshire.core :as json]
-            [clojure.tools.logging :as log]
             [schema.core :as s]
-            [clojure.xml :as xml]
-            [clojure.java.io :as io]
             [clj-xpath.core :refer [$x:text $x]]))
 
 (defrecord Wunderground [api-key]
@@ -14,14 +10,14 @@
   (stop [c] c))
 
 (defn parse-data [data]
-  {:temp     (Integer/valueOf ($x:text "/response/current_observation/temp_c" data))
-   :wind-kph (Integer/valueOf ($x:text "/response/current_observation/wind_kph" data))
-   :weather  ($x:text "/response/current_observation/weather" data)})
+  {:temp     (Integer/valueOf ($x:text "/response/history/dailysummary/summary/meantempm" data))
+   :wind-kph (Integer/valueOf ($x:text "/response/history/dailysummary/summary/meanwindspdm" data))
+   :pressure (Double/valueOf ($x:text "/response/history/dailysummary/summary/meanpressurem" data))})
 
-(defn get-weather [wun city]
+(defn get-weather [wun city date]
   (let [{api-key :api-key} wun
-        uri (format "http://api.wunderground.com/api/%s/conditions/q/%s.xml"
-                    api-key city)
+        uri (format "http://api.wunderground.com/api/%s/history_%s/q/%s.xml"
+                    api-key date city)
         res @(http/get uri)]
     (when-let [error (:error res)]
       (throw error))
@@ -37,4 +33,4 @@
   (map->Wunderground m))
 
 (comment
-  (get-weather (Wunderground. "6ef205eeb64534c6") "Finland/Tampere"))
+  (get-weather (Wunderground. "6ef205eeb64534c6") "Finland/Tampere" "20150506"))
