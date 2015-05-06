@@ -9,8 +9,13 @@
 
 (enable-console-print!)
 
+(defonce data (reagent/atom {:location "tampere"
+                             :date (tf/unparse (tf/formatter "yyyy-MM-dd")
+                                               (local/local-now))}))
+
 (defn city-select [cities data]
-  [:select {:on-change #(swap! data assoc :location (-> % .-target .-value))}
+  [:select {:on-change #(swap! data assoc :location (-> % .-target .-value))
+            :value (:location @data)}
    (map (fn [[val lbl]]
           [:option {:value val} lbl])
         cities)])
@@ -36,10 +41,7 @@
 (defn weather-component []
   (let [cities [["tampere" "Tampere"]
                 ["london" "London"]
-                ["durham" "Durham NC"]]
-        data (reagent/atom {:location "tampere"
-                            :date (tf/unparse (tf/formatter "yyyy-MM-dd")
-                                              (local/local-now))})]"Fetch"
+                ["durham" "Durham NC"]]]
     (fn []
       [:div
        [city-select cities data]
