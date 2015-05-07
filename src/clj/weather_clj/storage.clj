@@ -1,5 +1,6 @@
 (ns weather-clj.storage
   (:require [com.stuartsierra.component :as component]
+            [clojure.java.jdbc :as sql]
             [schema.core :as s]))
 
 (defrecord Storage [host port dbname user pass spec]
@@ -22,4 +23,16 @@
 (defn new-storage [m]
   (s/validate StorageSchema m)
   (map->Storage m))
+
+(defn fetch [{spec :spec} city date]
+  (-> (sql/query spec ["select conditions from conditions_cache where dt = ? and city = ? limit 1"
+                       date city])
+      first
+      :conditions))
+
+(defn save! [{spec :spec} city date conditions]
+  (sql/insert! spec "conditions_cache" {:city city
+                                        :dt date
+                                        :conditions conditions})
+  conditions)
 

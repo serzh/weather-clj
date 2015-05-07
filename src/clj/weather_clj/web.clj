@@ -8,15 +8,18 @@
             [compojure.core :as route :refer [GET]]
             [schema.core :as s]
             [weather-clj.wunderground :as wunderground]
-            [cheshire.core :as json]))
+            [cheshire.core :as json]
+            [weather-clj.storage :as storage]))
 
 (defn get-weather [{{:keys [city date]} :params
-                    web :web}]
-  (let [result (json/generate-string (wunderground/get-weather (:wunderground web)
-                                                               city date))]
-    (res/content-type {:body   result
-                       :status 200}
-                      "application/json")))
+                    {storage :storage wun :wunderground} :web}]
+  (let [result (or (storage/fetch storage city date)
+                   (->> (wunderground/get-weather wun city date)
+                        (json/generate-string)
+                        (storage/save! storage city date)))]
+    (-> result
+        (res/response)
+        (res/content-type "application/json"))))
 
 (route/defroutes routes
   (GET "/conditions/:city/:date" req (get-weather req))

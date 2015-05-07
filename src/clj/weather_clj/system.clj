@@ -12,7 +12,7 @@
     :web (component/using
            (web/new-web {:host web-host
                         :port (Integer/valueOf web-port)})
-           [:wunderground])
+           [:wunderground :storage])
     :wunderground (wunderground/new-wunderground {:api-key wunderground-api-key})
     :storage (storage/new-storage {:host db-host
                                    :port (Integer/valueOf db-port)

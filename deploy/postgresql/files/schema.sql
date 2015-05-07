@@ -1,5 +1,5 @@
-CREATE TABLE IF NOT EXISTS conditions (
+CREATE TABLE IF NOT EXISTS conditions_cache (
        city VARCHAR NOT NULL,
-       dt DATE NOT NULL,
+       dt VARCHAR NOT NULL,
        conditions TEXT NOT NULL
 );
