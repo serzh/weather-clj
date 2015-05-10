@@ -1,0 +1,12 @@
+---
+- name: Add PPA repo
+  apt_repository: repo=ppa:webupd8team/java state=present
+  sudo: yes
+
+- name: Accept license
+  shell: echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+  sudo: yes
+
+- name: Install JDK 7
+  apt: pkg="oracle-jdk7-installer" state=installed
+  sudo: yes

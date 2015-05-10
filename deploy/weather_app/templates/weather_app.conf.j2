@@ -1,0 +1,9 @@
+author "Serhii Nechyporchuk"
+start on (local-filesystems and net-device-up IFACE!=lo)
+chdir /home/{{ansible_ssh_user}}/weather-clj
+env LEIN_ROOT=yes
+script
+  #!/bin/bash
+  . /home/{{ansible_ssh_user}}/weather-clj/env-file
+  /usr/bin/lein trampoline run
+end script

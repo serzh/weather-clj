@@ -1,0 +1,31 @@
+---
+- name: Update Weather app
+  hosts: weather_app
+  tasks:
+    - name: Clean workspace
+      file: path=new-weather-clj state=absent
+
+    - name: Clone project
+      git: repo=https://github.com/serzh/weather-clj.git
+           dest=new-weather-clj
+           accept_hostkey=yes
+           update=yes
+           version=master
+
+    - name: Copy env-file
+      template: src=weather_app/templates/env-file.j2 dest=new-weather-clj/env-file
+
+    - name: Stop App
+      service: name=weather_app state=stopped
+      sudo: yes
+
+    - name: Remove old app
+      file: path=weather-clj state=absent
+      sudo: yes
+
+    - name: Set new app
+      command: mv new-weather-clj weather-clj
+
+    - name: Start App
+      service: name=weather_app state=started
+      sudo: yes

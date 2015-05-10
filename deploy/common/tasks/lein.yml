@@ -1,0 +1,9 @@
+- name: Download lein
+  command: wget -O /usr/bin/lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+  sudo: yes
+  args:
+    creates: /usr/bin/lein
+
+- name: Set it to be executable
+  file: path=/usr/bin/lein mode=a+x state=file
+  sudo: yes

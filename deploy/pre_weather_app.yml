@@ -1,0 +1,14 @@
+---
+- name: Install all prerequisites for Weather app
+  hosts: weather_app
+  tasks:
+    - include: common/tasks/oracle_jdk.yml
+    - include: common/tasks/lein.yml
+
+    - name: Install git
+      apt: pkg=git state=installed
+      sudo: yes
+
+    - name: Copy upstart file
+      template: src=weather_app/templates/weather_app.conf.j2 dest=/etc/init/weather_app.conf
+      sudo: yes
