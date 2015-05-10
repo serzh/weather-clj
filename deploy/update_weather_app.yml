@@ -15,6 +15,10 @@
     - name: Copy env-file
       template: src=weather_app/templates/env-file.j2 dest=new-weather-clj/env-file
 
+    - name: Configure logger for production
+      command: mv new-weather-clj/resources/logback.production.xml
+                  new-weather-clj/resources/logback.xml
+
     - name: Stop App
       service: name=weather_app state=stopped
       sudo: yes
