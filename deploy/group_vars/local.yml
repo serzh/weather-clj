@@ -2,3 +2,11 @@ ansible_ssh_user: vagrant
 
 pg_username: weather
 pg_password: TeopNec2
+web_host: 0.0.0.0
+web_port: 80
+wunderground_api_key: "6ef205eeb64534c6"
+db_host: 192.168.0.2
+db_port: 5432
+db_name: weather
+db_user: weather
+db_pass: TeopNec2
