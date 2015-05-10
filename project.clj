@@ -31,6 +31,8 @@
             [lein-environ "1.0.0"]
             [lein-figwheel "0.2.9"]]
 
+  :main weather-clj.main
+
   :source-paths ["src/clj"]
 
   :profiles {:dev [:dev-env
