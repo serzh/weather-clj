@@ -20,7 +20,7 @@
                  [com.github.kyleburton/clj-xpath "1.4.3"]
                  [org.postgresql/postgresql "9.3-1102-jdbc41"]
                  ;; Frontend deps
-                 [ring-webjars "0.1.0"]
+                 [ring-webjars "0.1.0" :exclusions [org.slf4j/slf4j-nop]]
                  [org.webjars/bootstrap "3.3.4"]
                  [reagent "0.5.0"]
                  [cljs-http "0.1.30"]
