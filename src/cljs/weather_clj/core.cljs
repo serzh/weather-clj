@@ -18,16 +18,24 @@
                  {:value "durham"  :label "Durham NC" :coords {:lat 36.04 :long -78.87}}])
 
 (defn city-select [cities data]
-  [:select {:on-change #(swap! data assoc :location (-> % .-target .-value))
-            :value (:location @data)}
-   (map (fn [{val :value lbl :label}]
-          [:option {:value val} lbl])
-        cities)])
+  [:div.form-group
+   [:label {:for "location"} "Location"]
+   [:select {:id        "location"
+             :class     "form-control"
+             :on-change #(swap! data assoc :location (-> % .-target .-value))
+             :value     (:location @data)}
+    (map (fn [{val :value lbl :label}]
+           [:option {:value val} lbl])
+         cities)]])
 
 (defn date-select [data]
-  [:input {:type      :date
-           :value     (:date @data)
-           :on-change #(swap! data assoc :date (->> % .-target .-value))}])
+  [:div.form-group
+   [:label {:for "date"} "Date"]
+   [:input {:id        "date"
+            :class     "form-control"
+            :type      :date
+            :value     (:date @data)
+            :on-change #(swap! data assoc :date (->> % .-target .-value))}]])
 
 (defn set-conditions! [data]
   (go
@@ -41,11 +49,24 @@
       (swap! data assoc :conditions conditions))))
 
 (defn fetch-button [data]
-  [:button {:on-click #(set-conditions! data)}
+  [:button {:type :button
+            :class "btn btn-primary"
+            :on-click #(set-conditions! data)}
    "Fetch"])
 
 (defn conditions [data]
-  [:div (pr-str (:conditions @data))])
+  (let [{:keys [temp wind-kph pressure]} (:conditions @data)]
+    [:div.row
+     [:h2 "Conditions"]
+     [:dl.dl-horizontal
+      [:dt "Temperature"]
+      [:dd temp " ℃"]
+
+      [:dt "Wind speed"]
+      [:dd wind-kph " kph"]
+
+      [:dt "Pressure"]
+      [:dd pressure " Gpa"]]]))
 
 (defn deg->rad [deg]
   (* deg (/ Math/PI 180)))
@@ -84,11 +105,11 @@
 (defn weather-component []
   (fn []
     (set-closest-to-user-conditions! data cities)
-    [:div
+    [:form
      [city-select cities data]
      [date-select data]
      [fetch-button data]
      [conditions data]]))
 
 (reagent/render-component [:div [weather-component]]
-                          (.-body js/document))
+                          (.getElementById js/document "conditions"))

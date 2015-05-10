@@ -3,7 +3,8 @@
             [ring.adapter.jetty :as jetty]
             [ring.middleware
              [resource :refer [wrap-resource]]
-             [keyword-params :refer [wrap-keyword-params]]]
+             [keyword-params :refer [wrap-keyword-params]]
+             [webjars :refer [wrap-webjars]]]
             [ring.util.response :as res]
             [compojure.core :as route :refer [GET]]
             [schema.core :as s]
@@ -33,6 +34,7 @@
   (-> routes
       (wrap-with-web c)
       (wrap-keyword-params)
+      (wrap-webjars "/assets")
       (wrap-resource "public")))
 
 (defrecord Web [host port srv]
