@@ -4,6 +4,7 @@ chdir /home/{{ansible_ssh_user}}/weather-clj
 env LEIN_ROOT=yes
 script
   #!/bin/bash
+  mkdir -p /var/log/weather-clj
   . /home/{{ansible_ssh_user}}/weather-clj/env-file > /var/log/weather-clj/app.out 2>&1
   /usr/bin/lein cljsbuild once min >> /var/log/weather-clj/app.out 2>&1
   /usr/bin/lein trampoline run >> /var/log/weather-clj/app.out 2>&1
