@@ -9,7 +9,7 @@
 
 (enable-console-print!)
 
-(defonce data (reagent/atom {:location nil
+(defonce data (reagent/atom {:city nil
                              :date (tf/unparse (tf/formatter "yyyy-MM-dd")
                                                (local/local-now))}))
 
@@ -19,11 +19,11 @@
 
 (defn city-select [cities data]
   [:div.form-group
-   [:label {:for "location"} "Location"]
-   [:select {:id        "location"
+   [:label {:for "city"} "City"]
+   [:select {:id        "city"
              :class     "form-control"
-             :on-change #(swap! data assoc :location (-> % .-target .-value))
-             :value     (:location @data)}
+             :on-change #(swap! data assoc :city (-> % .-target .-value))
+             :value     (:city @data)}
     (map (fn [{val :value lbl :label}]
            [:option {:value val} lbl])
          cities)]])
@@ -39,12 +39,12 @@
 
 (defn set-conditions! [data]
   (go
-    (let [{:keys [location date]} @data
+    (let [{:keys [city date]} @data
           date-str (->> date
                         (tf/parse (tf/formatter "yyyy-MM-dd"))
                         (tf/unparse (tf/formatter "yyyyMMdd")))
           conditions (:body (<! (http/get (string/format "/conditions/%s/%s"
-                                                         location
+                                                         city
                                                          date-str))))]
       (swap! data assoc :conditions conditions))))
 
@@ -99,7 +99,7 @@
           closest (->> cities
                        (map #(assoc % :dist (distance user-coords (:coords %))))
                        (apply min-key :dist))]
-      (swap! data assoc :location (:value closest))
+      (swap! data assoc :city (:value closest))
       (set-conditions! data))))
 
 (defn weather-component []
