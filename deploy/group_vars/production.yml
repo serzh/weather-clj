@@ -3,8 +3,8 @@ ansible_sudo_pass: weather
 
 pg_username: weather
 pg_password: VocFuef3
-web_host: 0.0.0.0
-web_port: 80
+web_host: 127.0.0.1
+web_port: 8080
 wunderground_api_key: "6ef205eeb64534c6"
 db_host: localhost
 db_port: 5432

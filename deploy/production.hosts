@@ -4,6 +4,10 @@
 [weather_app]
 188.166.81.11
 
+[nginx]
+188.166.81.11
+
 [production:children]
 db
 weather_app
+nginx
