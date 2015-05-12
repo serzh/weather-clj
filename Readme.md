@@ -18,6 +18,24 @@ For example:
 And run the application
 
     lein run
+    
+# Deployment
+To deploy application you should have access to the machines in deploy/production.hosts
+by ssh key without password. You can do this by running command
+
+    ssh-copy-id weather@machines-ip
+    
+You can ask me about the weather user password.
+
+After that you have to run following command in the deploy dir
+
+    ansible-playbook -i production.hosts site.yml
+    
+*Important*. This playbooks was designed to deploy to the Ubuntu boxes.
+
+To update existing version of the application run
+
+    ansible-playbook -i production.hosts update_weather_app.yml
 
 # Development
 
